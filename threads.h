@@ -1,7 +1,9 @@
 #ifndef THREADS_H_
 #define THREADS_H_
 
-struct thread;
+struct thread {
+	uintptr_t  stack, esp, ebp, edp;
+};
 
 struct thread *thread_create(void (*f)(void *arg), void *arg);
 void thread_add_runqueue(struct thread *t);

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <inttypes.h>
 #include "threads.h"
 
 void f3(void *arg)

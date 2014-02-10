@@ -1,11 +1,13 @@
 all: thread test
 
+CFLAGS = -Wall 
+
 thread: main.c threads.c threads.h
-	gcc -Wall threads.c main.c -o main
+	gcc $(CFLAGS) threads.c main.c -o main 
 	@./main
 
 test: main.c 
-	gcc -Wall main.c -o main
+	gcc $(CFLAGS) main.c -o main
 	@./main
 
 clean: 

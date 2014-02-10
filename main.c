@@ -2,6 +2,9 @@
 #include <inttypes.h>
 #include "threads.h"
 
+/* Pointer to first thread node in run queue */
+node *start;
+
 void f3(void *arg)
 {
     int i;
@@ -27,9 +30,9 @@ void f1(void *arg)
 {
     int i = 100;
     struct thread *t2 = thread_create(f2, NULL);
-    thread_add_runqueue(t2);
+    thread_add_runqueue(start, t2);
     struct thread *t3 = thread_create(f3, NULL);
-    thread_add_runqueue(t3);
+    thread_add_runqueue(start, t3);
     while(1) {
         printf("thread 1: %d\n", i++);
         if (i == 110) {
@@ -42,7 +45,7 @@ void f1(void *arg)
 int main(int argc, char **argv)
 {
     struct thread *t1 = thread_create(f1, NULL);
-    thread_add_runqueue(t1);
+    thread_add_runqueue(start, t1);
     thread_start_threading();
     printf("\nexited\n");
     return 0;

@@ -2,7 +2,8 @@
 #define THREADS_H_
 
 struct thread {
-	uintptr_t  stack, esp, ebp, edp;
+	uintptr_t  stack, esp, ebp, edp; 
+	jmp_buf env; 
 };
 
 typedef struct Node {

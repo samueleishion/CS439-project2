@@ -36,13 +36,20 @@ void queue_thread_remove(node *pointer, struct thread *t) {
 
 
 void thread_add_runqueue(node *pointer, struct thread *t) {
-	node *start = pointer;
-	while(pointer->next!=start) {
-		pointer = pointer -> next;
-	}
+	node *start = pointer; 
 
-	pointer -> next = (node *)malloc(sizeof(node));
-	pointer = pointer -> next;
-	pointer -> t = t;
+	if(start==NULL) {
+		start->t = t; 
+		start->next = t; 
+	} else {
+		
+		while(pointer->next!=start) {
+			pointer = pointer -> next;
+		}
+
+		pointer -> next = (node *)malloc(sizeof(node));
+		pointer = pointer -> next;
+		pointer -> t = t;
+	}
 }
 

@@ -11,4 +11,4 @@ test: main.c
 	@./main
 
 clean: 
-	rm -f *.o main *~
+	rm -f *.o main *~ *.dSYM

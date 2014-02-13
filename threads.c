@@ -8,35 +8,36 @@
 #define CAST(t,e) ((t)(e)) 
 #define TYPED_MALLOC(t) CAST(t*,malloc(sizeof(t))) 
 
+#define STACK_SIZE 4096 
+
 struct scheduler* robin; 
 int id_so_far = 0; 
 
 struct thread *thread_create(int id, void (*f)(void *arg), void *arg) { 
 	uintptr_t *memptr; 
 	struct thread *process; 
-	if(!posix_memalign((void **)&memptr,8,4096)) { 
-		// process = CAST(struct thread*,memptr); 
+	if(!posix_memalign((void **)&memptr,8,STACK_SIZE)) { 
 		process = TYPED_MALLOC(struct thread); 
-		// __asm __volatile("mov %%rsp, %%rax" : "=a" (process->esp) : );
-		// __asm __volatile("mov %%rbp, %%rax" : "=a" (process->ebp) : );
-		// process->stack=TYPED_MALLOC(uintptr_t); 
-		process->stack = memptr; 
-		// process->stack=arg; 
-		process->esp = process->stack; 
-		process->ebp = process->stack; 
-		// process->stack = (*f)(void *arg); 
-		process->id = ++id_so_far; 
-		// setjmp(robin->current->env); 
 		// @TODEL 
-		printf("Thread created.\n"); 
-	} else {
+		// printf("\tmemptr: \t%p\n",memptr); 
+		// printf("\tmemptr+stack: \t%p\n",(memptr+STACK_SIZE)-(20-sizeof(uintptr_t))); 
+		process->stack = memptr; 
+		process->esp = memptr+STACK_SIZE; 
+		process->ebp = memptr; 
+		process->id = ++id_so_far; 
+		process->fs = f; 
+		process->args = arg; 
+		process->ran = 0; 
+		// @TODEL 
+		printf("Thread created (%d).\n",process->id); 
+	} else { 
 		process = NULL; 
 		// @TODEL 
 		printf("Failed to create thread.\n"); 
-	}
+	} 
 
 	return process; 
-}
+} 
 
 void thread_add_runqueue(struct thread *tid) { 
 	if(robin==NULL) {
@@ -49,21 +50,29 @@ void thread_add_runqueue(struct thread *tid) {
 }
 
 void thread_yield(void) {
-	__asm __volatile("mov %%rsp, %%rax" : "=a" (robin->current->esp) : ); 
-	__asm __volatile("mov %%rbp, %%rax" : "=a" (robin->current->ebp) : ); 
-	setjmp(robin->current->env); 
 	// @TODEL 
-	printf("Yielding thread.\n"); 
+	printf("Yielding thread %d.\n", robin->current->id);  
+	setjmp(robin->current->env); 
 	schedule(); 
 	dispatch(); 
 }
 
 void dispatch(void) {
-	__asm __volatile("mov %%rax, %%rsp" : : "a" (robin->current->esp) ); 
-	__asm __volatile("mov %%rax, %%rbp" : : "a" (robin->current->ebp) ); 
+	// move register value into esp 
+	__asm__ volatile("mov %%rax, %%rsp" : : "a" (robin->previous->esp) );
+	__asm__ volatile("mov %%rax, %%rbp" : : "a" (robin->previous->ebp) );
+
+	if(!robin->current->ran) { 
+		robin->current->fs(robin->current->args); 
+		robin->current->ran = 1; 
+	} else {
+		// move esp into register 
+		__asm__ volatile("mov %%rsp, %%rax" : "=a" (robin->current->esp) : ); 
+		__asm__ volatile("mov %%rbp, %%rax" : "=a" (robin->current->ebp) : );
+		longjmp(robin->current->env,1); 
+	} 
 	// @TODEL 
 	printf("Dispatching thread %d.\n",robin->current->id); 
-	longjmp(robin->current->env,1); 
 }
 
 void schedule(void) {
@@ -81,7 +90,8 @@ void thread_exit(void) {
 void thread_start_threading(void) {
 	// @TODEL 
 	printf("Starting threading.\n"); 
-	thread_yield(); 
+	// thread_yield(); 
+	dispatch(); 
 }
 
 void scheduler_insert(struct thread* t) {
@@ -91,22 +101,15 @@ void scheduler_insert(struct thread* t) {
 		robin->start = t; 
 		robin->start->next = robin->start; 
 		robin->current = robin->start; 
+		robin->last = robin->start; 
+		robin->last->next = robin->start; 
+		robin->previous = t; 
 		robin->size = 1; 
 	} else {
-		// @TODEL 
-		printf("Adding to queue.\n"); 
-		struct thread* pointer = robin->start; 
-		struct thread* check = pointer->next; 
-		int loop = 0; 
-
-		while(check!=pointer && loop<1) {
-			pointer = check; 
-			check = pointer->next; 
-			if(pointer==robin->start) loop++; 
-		} 
-
-		check->next = t; 
-		robin->size++; 
+		robin->last->next = t; 
+		robin->last = t; 
+		t->next = robin->start;
+		robin->size++;  
 	}
 } 
 
@@ -135,6 +138,7 @@ void scheduler_remove(struct thread* t) {
 }
 
 void scheduler_advance(void) {
+	robin->previous = robin->current; 
 	robin->current = robin->current->next; 
 }
 

@@ -2,16 +2,20 @@
 #define THREADS_H_
 
 struct thread {
-	int id; 
+	int id, ran; 
 	jmp_buf env; 
-	uintptr_t stack, esp, ebp, edp; 
+	uintptr_t *stack, *esp, *ebp, *edp; 
 	struct thread *next; 
+	void (*fs)(void *); 
+	void *args; 
 };
 
 struct scheduler { 
 	int size; 
 	struct thread* start; 
+	struct thread* last; 
 	struct thread* current; 
+	struct thread* previous; 
 }; 
 
 // typedef struct Node {

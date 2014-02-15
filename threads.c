@@ -3,7 +3,7 @@
 #include <inttypes.h>
 #include <setjmp.h> 
 #include "threads.h"
-#include <malloc/malloc.h>
+#include <malloc.h>
 
 #define CAST(t,e) ((t)(e)) 
 #define TYPED_MALLOC(t) CAST(t*,malloc(sizeof(t))) 
@@ -16,6 +16,7 @@ int id_so_far = 0;
 struct thread *thread_create(int id, void (*f)(void *arg), void *arg) { 
 	uintptr_t *memptr; 
 	struct thread *process; 
+        printf("THREAD_CREATE\n");
 	if(!posix_memalign((void **)&memptr,8,STACK_SIZE)) { 
 		process = TYPED_MALLOC(struct thread); 
 		// @TODEL 
@@ -29,75 +30,95 @@ struct thread *thread_create(int id, void (*f)(void *arg), void *arg) {
 		process->args = arg; 
 		process->ran = 0; 
 		// @TODEL 
-		printf("Thread created (%d).\n",process->id); 
+		printf("   Thread created (%d).\n",process->id); 
 	} else { 
 		process = NULL; 
 		// @TODEL 
-		printf("Failed to create thread.\n"); 
+		printf("   Failed to create thread.\n"); 
 	} 
 
+        printf("\n\n");
 	return process; 
 } 
 
 void thread_add_runqueue(struct thread *tid) { 
+        printf("THREAT_ADD_RUNQUEUE\n");
 	if(robin==NULL) {
 		robin = TYPED_MALLOC(struct scheduler); 
 		robin->start = NULL; 
 		// @TODEL 
-		printf("Started queue.\n"); 
+		printf("   Started queue.\n"); 
 	} 
+        printf("\n\n");
 	scheduler_insert(tid); 
 }
 
 void thread_yield(void) {
 	// @TODEL 
-	printf("Yielding thread %d.\n", robin->current->id);  
+	printf("THREAD_YIELD\n");
+	printf("   Yielding thread %d.\n", robin->current->id);  
 	setjmp(robin->current->env); 
+	printf("\n\n");
 	schedule(); 
 	dispatch(); 
 }
-
+		
 void dispatch(void) {
+	printf("DISPATCH\n");
+	printf("   current thread id is %d\n",robin->current->id);
 	// move register value into esp 
 	__asm__ volatile("mov %%rax, %%rsp" : : "a" (robin->previous->esp) );
 	__asm__ volatile("mov %%rax, %%rbp" : : "a" (robin->previous->ebp) );
 
+	printf("   moved register values for thread %d into thread stack variables\n",robin->current->id);
+	
 	if(!robin->current->ran) { 
-		robin->current->fs(robin->current->args); 
+		printf("   identified thread as never been ran\n");
 		robin->current->ran = 1; 
+		robin->current->fs(robin->current->args);
+
+		printf("   identified thread as being run before\n");
 	} else {
+		printf("   identified thread as being run before\n");
 		// move esp into register 
 		__asm__ volatile("mov %%rsp, %%rax" : "=a" (robin->current->esp) : ); 
 		__asm__ volatile("mov %%rbp, %%rax" : "=a" (robin->current->ebp) : );
 		longjmp(robin->current->env,1); 
 	} 
 	// @TODEL 
-	printf("Dispatching thread %d.\n",robin->current->id); 
+	printf("   Dispatching thread %d.\n",robin->current->id); 
+	printf("\n\n");
 }
 
 void schedule(void) {
 	// @TODEL 
-	printf("Scheduling thread.\n"); 
+	printf("SCHEDULE\n");
+	printf("   Scheduling thread.\n");
+	printf("\n\n"); 
 	scheduler_advance(); 
 }
 
 void thread_exit(void) {
 	// @TODEL 
-	printf("Exiting thread.\n"); 
+	printf("THREAD_EXIT\n");
+	printf("   Exiting thread.\n");
+	printf("\n\n"); 
 	scheduler_remove(robin->current); 
 }
 
 void thread_start_threading(void) {
 	// @TODEL 
-	printf("Starting threading.\n"); 
+	printf("THREAD_START_THREADING\n");
+	printf("\n\n"); 
 	// thread_yield(); 
 	dispatch(); 
 }
 
 void scheduler_insert(struct thread* t) {
+        printf("SCHEDULER_INSERT\n");
 	if(robin->start==NULL) {
 		// @TODEL 
-		printf("Inserting at start of queue.\n"); 
+		printf("   Inserting at start of queue.\n"); 
 		robin->start = t; 
 		robin->start->next = robin->start; 
 		robin->current = robin->start; 
@@ -106,11 +127,15 @@ void scheduler_insert(struct thread* t) {
 		robin->previous = t; 
 		robin->size = 1; 
 	} else {
+                printf("   Inserting into a nonempty queue.\n");
+                t->next = robin->start;
 		robin->last->next = t; 
 		robin->last = t; 
-		t->next = robin->start;
+		/*t->next = robin->start;*/
 		robin->size++;  
+                printf("   Size of queue is %d\n", robin->size);
 	}
+        printf("\n\n");
 } 
 
 void scheduler_remove(struct thread* t) {
@@ -125,11 +150,11 @@ void scheduler_remove(struct thread* t) {
 	}
 	
 	if(loop>=1) {
-		printf("Thread is not present.\n"); 
+		printf("   Thread is not present.\n"); 
 		return; 
 	} 
 	// @TODEL 
-	else printf("Removing thread.\n"); 
+	else printf("   Removing thread.\n"); 
 
 	pointer->next = check->next; 
 	free(check); 
@@ -138,8 +163,10 @@ void scheduler_remove(struct thread* t) {
 }
 
 void scheduler_advance(void) {
+	printf("SCHEDULER_ADVANCE\n");
 	robin->previous = robin->current; 
 	robin->current = robin->current->next; 
+	printf("\n\n"); 
 }
 
 /* Pointer to first thread node in run queue */

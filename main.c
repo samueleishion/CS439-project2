@@ -28,9 +28,9 @@ void f2(void *arg)
 void f1(void *arg)
 {
     int i = 100;
-    struct thread *t2 = thread_create(2, f2, NULL);
+    struct thread *t2 = thread_create(f2, NULL);
     thread_add_runqueue(t2);
-    struct thread *t3 = thread_create(3, f3, NULL);
+    struct thread *t3 = thread_create(f3, NULL);
     thread_add_runqueue(t3);
     while(1) {
         printf("thread 1: %d\n", i++);
@@ -44,7 +44,7 @@ void f1(void *arg)
 int main(int argc, char **argv)
 {
     printf("MAIN\n");
-    struct thread *t1 = thread_create(1, f1, NULL);
+    struct thread *t1 = thread_create(f1, NULL);
     thread_add_runqueue(t1);
     thread_start_threading();
     printf("\nexited\n");

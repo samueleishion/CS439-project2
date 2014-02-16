@@ -17,7 +17,7 @@ int id_so_far = 0;
 // Creates and initializes a thread using an 8-byte aligned memory allocation
 // All stack pointer variables are populated accordingly
 // If the thread creation is unsuccessful, NULL is returned
-struct thread *thread_create(int id, void (*f)(void *arg), void *arg) { 
+struct thread *thread_create(void (*f)(void *arg), void *arg) { 
 	uintptr_t *memptr; 
 	struct thread *process; 
 	if(!posix_memalign((void **)&memptr,8,STACK_SIZE)) { 

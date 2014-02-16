@@ -76,6 +76,8 @@ void dispatch(void) {
 		__asm__ volatile("mov %%rbp, %%rax" : "=a" (robin->current->ebp) : );
 		longjmp(robin->current->env,1); 
 	} 
+
+	thread_exit(); 
 }
 
 // Increment current and previous pointers in scheduler
@@ -87,6 +89,7 @@ void schedule(void) {
 void thread_exit(void) {
  
 	scheduler_remove(robin->current); 
+	thread_yield(); 
 }
 
 void thread_start_threading(void) {

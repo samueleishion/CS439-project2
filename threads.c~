@@ -60,11 +60,9 @@ void thread_yield(void) {
 // Resume execution of the next thread scheduled to execute
 void dispatch(void) {
 	// move register value into esp 
-
-	if(robin->current->id != 1) {
-	__asm__ volatile("mov %%rax, %%rsp" : : "a" (robin->previous->esp) );
-	__asm__ volatile("mov %%rax, %%rbp" : : "a" (robin->previous->ebp) );
-   }
+   
+//	__asm__ volatile("mov %%rax, %%rsp" : : "a" (robin->previous->esp) );
+//	__asm__ volatile("mov %%rax, %%rbp" : : "a" (robin->previous->ebp) );
    
 	if(!robin->current->ran) { 
 		robin->current->ran = 1; 

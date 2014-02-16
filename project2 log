@@ -1,0 +1,44 @@
+CS 439
+Project 2
+
+Michael Galvan
+CS ID: mgalvan
+EID: galvanmv
+
+Samuel Acuna
+CS ID:samuelei
+EID: sa29589
+
+02/08
+30 min, M Galvan driving, worked on development of thread_create
+30 min, S Acuna driving, worked on thread_create
+30 min, M Galvan driving, tested thread_create / added structs for queue
+
+02/09
+35 min, S Acuna driving, adding nodes to queue / testing
+30 min, M Galvan driving, continuing w/ queue testing of node entries
+
+02/10
+30 min, S Acuna driving, working on register pointers
+30 min, M Galvan driving, continuing w/ register pointers, saving stack pointer values
+30 min, S Acuna driving, testing register pointer/longjmp/setjmp code
+30 min, M Galvan driving, testing longjmp/setjmp
+
+02/12
+30 min, S Acuna driving, updates to scheduling
+30 min, M Galvan driving, development of dispatch method
+30 min, S Acuna driving, dispatch method
+30 min, M Galvan driving, testing dispatch
+
+02/15
+30 min, S Acuna driving, making updates to scheduler insertions
+30 min, M Galvan driving, testing insertions
+30 min, S Acuna driving, worked on removing threads from queue
+
+02/16
+30 min, M Galvan driving, worked on solving seg fault with longjmp
+30 min, S Acuna driving, worked on seg fault with scheduler
+30 min, M Galvan driving, worked on exiting issue
+30 min, S Acuna driving, continued work on exiting issue
+30 min, M Galvan driving, testing
+30 min, S Acuna driving, updated scheduler insertion

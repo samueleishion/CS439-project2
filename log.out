@@ -1,0 +1,119 @@
+commit 27e8c1148758f48172da78f0df046c43e41d0582
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sun Feb 16 17:04:58 2014 -0600
+
+    DONE
+
+commit dea4e4cc44085fa80da59811f857b57fac21ede1
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 15:45:33 2014 -0600
+
+    Modify dispatch and exit to exit process/function properly
+
+commit 0265404f79ac044bacf20b300f474a59b477f4c2
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 15:37:32 2014 -0600
+
+    Added test from piazza (recommit)
+
+commit ed1864f0ffb36c3888868365c260ecda74fd7eb2
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 15:36:15 2014 -0600
+
+    Added test from piazza
+
+commit 3ee015c01820218525ba20fd177413c604b9640e
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 15:20:52 2014 -0600
+
+    Added small test
+
+commit eb3d5a9c48c2f7942b1ead27f6a021730deb9b1d
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 15:18:50 2014 -0600
+
+    midified thread_add_runqueue to add threads before current
+
+commit 79539b3989c718a63ec16ca9c37b41462f9b9d5b
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 15:00:35 2014 -0600
+
+    Changed threads header file also
+
+commit 9a2aaa03f8515a5a005dab8c7fa11289b5a88ba9
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Sun Feb 16 14:58:19 2014 -0600
+
+    Changed thread_create parameters and removed unnecessary files.
+
+commit 9fa699ca8139b943b675f2500836114e81adc7df
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sun Feb 16 14:48:50 2014 -0600
+
+    It works...
+
+commit 862eb8eecbb82bde22b29011e13f5aeb9ea9609e
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sat Feb 15 15:00:51 2014 -0600
+
+    Updated thread_yield
+
+commit 5d504e2eb034005a52fe1c0ec64b75712e5c6886
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sat Feb 15 12:08:25 2014 -0600
+
+    runs first pass for each thread, but never runs threads after that.
+
+commit f9a3a67eb76b1d3a64df41cfea678a74ec0e7d9e
+Author: Sam Acuna <samueleishion@gmail.com>
+Date:   Wed Feb 12 20:51:45 2014 -0600
+
+    Work!!!!
+
+commit 3937c929ab37ad80223b53658835ec11ad7d8d6f
+Author: Sam Acuna <samueleishion@gmail.com>
+Date:   Wed Feb 12 18:10:24 2014 -0600
+
+    Made some changes based on scheduling
+
+commit e71964711fcff60d06354483825801a3a87374a9
+Author: samueleishion <samueleishion@gmail.com>
+Date:   Mon Feb 10 19:21:14 2014 -0600
+
+    Added some basic functions, but still stuck with environment and register pointers
+
+commit d21f38c58ca097d42bb7ad1128497738a43dcc87
+Author: Samuel Acuna <samuelei@cs.utexas.edu>
+Date:   Mon Feb 10 18:04:45 2014 -0600
+
+    Added conditional statement to adding nodes to queue
+
+commit faa3376341f4d95054596a657da2d81177bda384
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sun Feb 9 21:51:48 2014 -0600
+
+    Queue added
+
+commit 72aae5c9a4c9459460e50d976faaaa03aadcd8cb
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sat Feb 8 20:14:46 2014 -0600
+
+    added first function
+
+commit f5f0b2dc193f41f5557fb8608057b11106c1f362
+Author: Michael Galvan <mgalvan@cs.utexas.edu>
+Date:   Sat Feb 8 18:47:54 2014 -0600
+
+    Test update
+
+commit 7efb5fd8a3853ae80bbc6033338f2b209e96155a
+Author: Sam Acuna <samueleishion@gmail.com>
+Date:   Sat Feb 8 18:30:49 2014 -0600
+
+    Added main files to repo
+
+commit 508fd1ee1b0350f395a6a6fc87df9eb76ec283a3
+Author: Samuel Acuna <samueleishion@gmail.com>
+Date:   Sat Feb 8 16:28:01 2014 -0800
+
+    Initial commit

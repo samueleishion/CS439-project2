@@ -13,12 +13,15 @@
 
 struct scheduler* robin; 
 int id_so_far = 0; 
+jmp_buf GLOBAL_ENV; 
+uintptr_t GLOBAL_SP, GLOBAL_BP; 
 
 // Creates and initializes a thread using an 8-byte aligned memory allocation
 // All stack pointer variables are populated accordingly
 // If the thread creation is unsuccessful, NULL is returned
 struct thread *thread_create(void (*f)(void *arg), void *arg) { 
-	uintptr_t *memptr; 
+   
+   uintptr_t *memptr; 
 	struct thread *process; 
 	if(!posix_memalign((void **)&memptr,8,STACK_SIZE)) { 
 		process = TYPED_MALLOC(struct thread); 
@@ -54,6 +57,7 @@ void thread_yield(void) {
 		schedule(); 
 		dispatch(); 
    }
+   return;
 }
 
 // Save stack register results to the internal thread stack pointer variables
@@ -78,6 +82,7 @@ void dispatch(void) {
 	} 
 
 	thread_exit(); 
+   return;
 }
 
 // Increment current and previous pointers in scheduler
@@ -88,12 +93,23 @@ void schedule(void) {
 
 void thread_exit(void) {
  
-	scheduler_remove(robin->current); 
-	thread_yield(); 
+   scheduler_remove(robin->current); 
+   if(robin->size > 0)
+      dispatch();
+    
+   __asm__ volatile("mov %%rsp, %%rax" : "=a" (GLOBAL_SP) : );  
+   __asm__ volatile("mov %%rbp, %%rax" : "=a" (GLOBAL_BP) : ); 
+   longjmp(GLOBAL_ENV,1); 
+   //return;
 }
 
 void thread_start_threading(void) {
-
+   
+   //__asm__ volatile("mov %%rax, %%rsp" : : "a" (GLOBAL_SP) );  
+   //__asm__ volatile("mov %%rax, %%rbp" : : "a" (GLOBAL_BP) ); 
+   if(setjmp(GLOBAL_ENV)!=0)
+        return; 
+   
 	dispatch(); 
 }
 
@@ -143,6 +159,8 @@ void scheduler_remove(struct thread* t) {
 	} 
 
 	pointer->next = check->next; 
+   robin->current = robin->current->next;
+   robin->previous->next = robin->current;
 	free(check); 
 	robin->size -= 1; 
 	return; 

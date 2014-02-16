@@ -112,10 +112,14 @@ void scheduler_insert(struct thread* t) {
 		robin->size = 1; 
 	} 
 	else {
-      t->next = robin->start;
-		robin->last->next = t; 
-		robin->last = t; 
-		robin->size++;  
+	  t->next = robin->current; 
+	  robin->previous->next = t; 
+	  robin->previous = t; 
+	  robin->size++;   
+	  //t->next = robin->start;
+	  //robin->last->next = t; 
+	  //robin->last = t; 
+	  //robin->size++;  
 	}
 } 
 
